@@ -5,114 +5,116 @@ using System.Windows.Forms;
 
 namespace LessMsi.Gui
 {
-	partial class AboutBox : Form
-	{
-		public AboutBox()
-		{
-			InitializeComponent();
-			this.Text = String.Format("About {0}", AssemblyTitle);
-			this.labelProductName.Text = AssemblyProduct;
-			this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-			this.labelCopyright.Text = AssemblyCopyright;
-		}
+    partial class AboutBox : Form
+    {
+        public AboutBox()
+        {
+            InitializeComponent();
+            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.labelProductName.Text = AssemblyProduct;
+            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelCopyright.Text = $"Copyright Scott Willeke © 2004-{DateTime.Now.Year}";
 
-		#region Assembly Attribute Accessors
+            Icon = Properties.Resources.LessmsiIcon;
+        }
 
-		public string AssemblyTitle
-		{
-			get
-			{
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-				if (attributes.Length > 0)
-				{
-					AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-					if (titleAttribute.Title != "")
-					{
-						return titleAttribute.Title;
-					}
-				}
-				return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-			}
-		}
+        #region Assembly Attribute Accessors
 
-		public string AssemblyVersion
-		{
-			get
-			{
-				return Assembly.GetExecutingAssembly().GetName().Version.ToString();
-			}
-		}
+        public string AssemblyTitle
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != "")
+                    {
+                        return titleAttribute.Title;
+                    }
+                }
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+            }
+        }
 
-		public string AssemblyDescription
-		{
-			get
-			{
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-				if (attributes.Length == 0)
-				{
-					return "";
-				}
-				return ((AssemblyDescriptionAttribute)attributes[0]).Description;
-			}
-		}
+        public string AssemblyVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
 
-		public string AssemblyProduct
-		{
-			get
-			{
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-				if (attributes.Length == 0)
-				{
-					return "";
-				}
-				return ((AssemblyProductAttribute)attributes[0]).Product;
-			}
-		}
+        public string AssemblyDescription
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return "";
+                }
+                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+            }
+        }
 
-		public string AssemblyCopyright
-		{
-			get
-			{
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-				if (attributes.Length == 0)
-				{
-					return "";
-				}
-				return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-			}
-		}
+        public string AssemblyProduct
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return "";
+                }
+                return ((AssemblyProductAttribute)attributes[0]).Product;
+            }
+        }
 
-		public string AssemblyCompany
-		{
-			get
-			{
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-				if (attributes.Length == 0)
-				{
-					return "";
-				}
-				return ((AssemblyCompanyAttribute)attributes[0]).Company;
-			}
-		}
-		#endregion
+        public string AssemblyCopyright
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return "";
+                }
+                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+            }
+        }
 
-		private void AboutBox_Load(object sender, EventArgs e)
-		{
-			var aboutRtf = GetType().Assembly.GetManifestResourceStream(GetType(), "aboutbox.rtf");
-			Debug.Assert(aboutRtf != null, "Failed to load aboutbox.rtf");
-			this.richTextBox.LoadFile(aboutRtf, RichTextBoxStreamType.RichText);
-		}
+        public string AssemblyCompany
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return "";
+                }
+                return ((AssemblyCompanyAttribute)attributes[0]).Company;
+            }
+        }
+        #endregion
 
-		private void richTextBox_LinkClicked(object sender, LinkClickedEventArgs e)
-		{
-			Process.Start(e.LinkText);
-		}
+        private void AboutBox_Load(object sender, EventArgs e)
+        {
+            var aboutRtf = GetType().Assembly.GetManifestResourceStream(GetType(), "aboutbox.rtf");
+            Debug.Assert(aboutRtf != null, "Failed to load aboutbox.rtf");
+            this.richTextBox.LoadFile(aboutRtf, RichTextBoxStreamType.RichText);
+        }
 
-		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
+        private void richTextBox_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            Process.Start(e.LinkText);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
 			var text = ((LinkLabel) sender).Text;
-			var link = text.Substring(e.Link.Start, e.Link.Length);
-			Process.Start(link);
-		}
-	}
+            var link = text.Substring(e.Link.Start, e.Link.Length);
+            Process.Start(link);
+        }
+    }
 }
